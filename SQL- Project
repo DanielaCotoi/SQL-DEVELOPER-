@@ -1,0 +1,827 @@
+DROP TABLE Clienti CASCADE CONSTRAINTS;
+DROP TABLE Comenzi CASCADE CONSTRAINTS;
+DROP TABLE Detalii_comanda CASCADE CONSTRAINTS;
+DROP TABLE Produse CASCADE CONSTRAINTS;
+DROP TABLE Recenzii CASCADE CONSTRAINTS;
+
+CREATE TABLE Clienti (
+    ID_Client NUMBER PRIMARY KEY,
+    Nume VARCHAR2(50),
+    Prenume VARCHAR2(50),
+    Email VARCHAR2(100) UNIQUE,
+    Parola VARCHAR2(100),
+    Telefon VARCHAR2(15),
+    Adresa VARCHAR2(100)
+);
+CREATE TABLE Produse (
+    ID_Produs NUMBER PRIMARY KEY,
+    Nume VARCHAR2(100),
+    Descriere CLOB,
+    Pret NUMBER(10, 2),
+    Stoc NUMBER,
+    Categorie VARCHAR2(50)
+);
+CREATE TABLE Comenzi (
+    ID_Comanda NUMBER PRIMARY KEY,
+    ID_Client NUMBER,
+    Data_Comanda DATE,
+    Stare VARCHAR2(20),
+    FOREIGN KEY (ID_Client) REFERENCES Clienti (ID_Client)
+);
+CREATE TABLE Detalii_Comanda (
+    ID_Detalii NUMBER PRIMARY KEY,
+    ID_Comanda NUMBER,
+    ID_Produs NUMBER,
+    Cantitate NUMBER,
+    Pret_Unitar NUMBER(10, 2),
+    FOREIGN KEY (ID_Comanda) REFERENCES Comenzi (ID_Comanda),
+    FOREIGN KEY (ID_Produs) REFERENCES Produse (ID_Produs)
+);
+CREATE TABLE Recenzii (
+    ID_Recenzie NUMBER PRIMARY KEY,
+    ID_Client NUMBER,
+    ID_Produs NUMBER,
+    Text_Recenzie CLOB,
+    Nota NUMBER(1, 0),
+    Data_Recenzie DATE,
+    FOREIGN KEY (ID_Client) REFERENCES Clienti (ID_Client),
+    FOREIGN KEY (ID_Produs) REFERENCES Produse (ID_Produs)
+);
+
+ALTER TABLE Clienti
+ADD Data_Nastere DATE;
+SELECT * FROM clienti;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('2004-03-10', 'YYYY-MM-DD')
+WHERE ID_Client = 1;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('2001-05-16', 'YYYY-MM-DD')
+WHERE ID_Client = 2;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('1988-09-22', 'YYYY-MM-DD')
+WHERE ID_Client = 3;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('1992-04-18', 'YYYY-MM-DD')
+WHERE ID_Client = 4;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('2004-11-30', 'YYYY-MM-DD')
+WHERE ID_Client = 5;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('1987-07-03', 'YYYY-MM-DD')
+WHERE ID_Client = 6;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('2020-02-14', 'YYYY-MM-DD')
+WHERE ID_Client = 7;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('1983-06-08', 'YYYY-MM-DD')
+WHERE ID_Client = 8;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('2010-10-25', 'YYYY-MM-DD')
+WHERE ID_Client = 9;
+
+UPDATE Clienti
+SET Data_Nastere = TO_DATE('1989-12-05', 'YYYY-MM-DD')
+WHERE ID_Client = 10;
+
+SELECT * FROM clienti;
+
+
+ALTER TABLE Clienti
+DROP COLUMN Telefon;
+SELECT * FROM clienti;
+
+ALTER TABLE Clienti
+RENAME COLUMN Prenume TO Nume_Mijlociu;
+SELECT * FROM clienti;
+
+
+ALTER TABLE Produse
+ADD CONSTRAINT Check_Pret_Pozitiv 
+CHECK (Pret > 0);
+rollback;
+
+ALTER TABLE Produse
+DISABLE CONSTRAINT Check_Pret_Pozitiv;
+
+ALTER TABLE Comenzi
+MODIFY Stare DEFAULT 'Neprocesata';
+select * from comenzi;
+
+ALTER TABLE Produse
+ADD CONSTRAINT Check_Stoc_NonNegativ
+CHECK (Stoc >= 0);
+
+ALTER TABLE Produse
+DISABLE CONSTRAINT Check_Stoc_NonNegativ;
+
+ALTER TABLE Comenzi
+RENAME COLUMN Stare TO Status;
+select * from comenzi;
+
+ALTER TABLE Comenzi
+MODIFY Status VARCHAR2(30);
+rollback;
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(1, 'Cotoi', 'Daniela', 'danielacotoi232@gmail.com', 'parola_danii', '0751943940', 'Strada A1, Nr. 123');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(2, 'Dragotoiu', 'Catalin', 'catalindrago@gmail.com', 'parola_andrei', '0783456789', 'Strada B2, Nr. 456');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(3, 'Georgescu', 'Ana', 'ana.georgescu@gmail.com', 'parola_ana', '0784567890', 'Strada C3, Nr. 789');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(4, 'Mihai', 'Razvan', 'razvan.mihai@gmail.com', 'parola_razvan', '0745678901', 'Strada D4, Nr. 101');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(5, 'Dumitru', 'Elena', 'elena.dumitru@gmail.com', 'parola_elena', '0756789012', 'Strada E5, Nr. 1122');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(6, 'Voicu', 'Gabriel', 'gabriel.voicu@gmail.com', 'parola_gabriel', '0767890123', 'Strada F6, Nr. 3344');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(7, 'Stoica', 'Alexandra', 'alexandra.stoica@gmail.com', 'parola_alexandra', '0778901234', 'Strada G7, Nr. 5566');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(8, 'Gheorghiu', 'Adrian', 'adrian.gheorghiu@gmail.com', 'parola_adrian', '0789012345', 'Strada H8, Nr. 7788');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(9, 'Constantin', 'Laura', 'laura.constantin@gmail.com', 'parola_laura', '0790123456', 'Strada I9, Nr. 9900');
+
+INSERT INTO Clienti (ID_Client, Nume, Prenume, Email, Parola, Telefon, Adresa)
+VALUES
+(10, 'Cristea', 'Ionut', 'ionut.cristea@gmail.com', 'parola_ionut', '0772345678', 'Strada J10, Nr. 112233');
+
+INSERT INTO Clienti (ID_Client, Nume, Nume_Mijlociu, Email, Parola, Adresa)
+VALUES
+(11, 'Criste', 'Iont', 'iont.critea@gmail.com', 'parol_ionut', 'Strada J0, Nr. 11233');
+
+
+select * from clienti;
+
+UPDATE clienti
+SET Nume = 'Dragotoiu'
+WHERE id_client = 10;
+ROLLBACK;
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (1, 'Laptop HP Pavilion', 'Laptop performant cu procesor i5 si SSD', 3299.99, 20, 'Electronice');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (2, 'Smartphone Samsung Galaxy S21', 'Telefon inteligent cu camers de înalts rezolutie', 2499.99, 15, 'Telefoane');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (3, 'Televizor LG OLED 4K', 'Televizor cu ecran OLED si rezolutie 4K', 4999.99, 10, 'Electronice');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (4, 'Aparat de cafea DeLonghi', 'Espressor automat pentru cafea proaspata', 599.99, 30, 'Bucatarie');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (5, 'Mouse gaming Logitech G Pro', 'Mouse cu senzor de înalta precizie', 79.99, 50, 'Periferice');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (6, 'Casti wireless Sony WH-1000XM4', 'Casti cu tehnologie de anulare a zgomotului', 349.99, 25, 'Audio');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (7, 'Masa de birou IKEA', 'Masa ergonomica pentru spatii de lucru moderne', 199.99, 15, 'Mobilier');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (8, 'Set de tigai Tefal Ingenio', 'Set cu tigai antiaderente si maner detasabil', 149.99, 20, 'Bucatarie');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (9, 'Kit LEGO Star Wars Millennium Falcon', 'Set de construc?ie pentru pasionatii de Star Wars', 199.99, 5, 'Jucarii');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (10, 'Bicicleta de munte Scott Aspect', 'Bicicleta pentru explorarea traseelor montane', 899.99, 8, 'Sport');
+
+INSERT INTO Produse (ID_Produs, Nume, Descriere, Pret, Stoc, Categorie)
+VALUES (11, 'Bicicleta pentru drum drept Scott Aspect', 'Bicicleta pentru explorarea drumurilor de vale', 400.00 , 8, 'Sport');
+
+SELECT * FROM Produse;
+
+DELETE FROM Produse 
+WHERE id_produs = 11;
+
+
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda)
+VALUES (1, 1, TO_DATE('2023-06-24', 'YYYY-MM-DD'));
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (2, 2, TO_DATE('2023-04-20', 'YYYY-MM-DD'), 'Procesare');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (3, 3, TO_DATE('2023-05-15', 'YYYY-MM-DD'), 'Procesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (4, 4, TO_DATE('2023-11-08', 'YYYY-MM-DD'), 'Neprocesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare) 
+VALUES (5, 5, TO_DATE('2023-12-05', 'YYYY-MM-DD'), 'Procesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (6, 6, TO_DATE('2023-09-06', 'YYYY-MM-DD'), 'Procesare');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare) 
+VALUES (7, 7, TO_DATE('2023-06-17', 'YYYY-MM-DD'), 'Procesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (8, 8, TO_DATE('2023-01-18', 'YYYY-MM-DD'), 'Neprocesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare)
+VALUES (9, 9, TO_DATE('2023-02-27', 'YYYY-MM-DD'), 'Procesare');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda, Stare) 
+VALUES (10, 10, TO_DATE('2023-12-10', 'YYYY-MM-DD'), 'Procesata');
+
+INSERT INTO Comenzi (ID_Comanda, ID_Client, Data_Comanda) 
+VALUES (11, 11, TO_DATE('2023-12-10', 'YYYY-MM-DD'));
+
+SELECT * FROM Comenzi;
+
+UPDATE Comenzi 
+SET Status   = 'Anulata'
+WHERE id_comanda = 10;
+
+UPDATE Comenzi
+SET Status = 'In curs de procesare'
+WHERE Status IS NULL;
+
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (1, 1, 1, 2, 3299.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar) 
+VALUES (2, 2, 2, 3, 2499.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (3, 3, 3, 1, 4999.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (4, 4, 4, 2, 599.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar) 
+VALUES (5, 5, 5, 4,  79.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (6, 6, 6, 1, 349.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (7, 7, 7, 3, 199.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar) 
+VALUES (8, 8, 8, 2, 149.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar) 
+VALUES (9, 9, 9, 1, 199.99);
+
+INSERT INTO Detalii_Comanda (ID_Detalii, ID_Comanda, ID_Produs, Cantitate, Pret_Unitar)
+VALUES (10, 10, 10, 5, 899.99);
+
+
+SELECT * FROM Detalii_Comanda;
+
+
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (1, 1, 1, 'Produs foarte bun!', 5, TO_DATE('2023-11-04', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (2, 2, 2, 'Recomand!', 4, TO_DATE('2023-11-05', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (3, 3, 3, 'Nu sunt multumit.', 2, TO_DATE('2023-11-06', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (4, 4, 4, 'Foarte frumos!', 5, TO_DATE('2023-11-07', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie)
+VALUES (5, 5, 5, 'Ok, dar nu extraordinar.', 3, TO_DATE('2023-11-08', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (6, 6, 6, 'Excelent!', 5, TO_DATE('2023-11-09', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (7, 7, 7, 'Nu recomand.', 1, TO_DATE('2023-11-10', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie)
+VALUES (8, 8, 8, 'Perfect pentru nevoile mele.', 5, TO_DATE('2023-11-11', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie)
+VALUES (9, 9, 9, 'Nu a fost ceea ce ma asteptam.', 2, TO_DATE('2023-11-12', 'YYYY-MM-DD'));
+
+INSERT INTO Recenzii (ID_Recenzie, ID_Client, ID_Produs, Text_Recenzie, Nota, Data_Recenzie) 
+VALUES (10, 10, 10, 'Bun raport calitate-pret.', 4, TO_DATE('2023-11-13', 'YYYY-MM-DD'));
+
+SELECT * FROM Recenzii;
+-- UPDATE DELETE::::
+
+UPDATE Produse
+SET Pret = 4599.99 --era 3299.99 inainte 
+WHERE ID_Produs = 1;
+SELECT * FROM produse;
+ROLLBACK;
+
+UPDATE Comenzi
+SET Status = 'Finalizata' -- era procesata inainte 
+WHERE ID_Comanda = 5;
+SELECT * FROM comenzi;
+ROLLBACK;
+
+UPDATE Detalii_Comanda
+SET Cantitate = 3
+WHERE ID_Detalii = 6;
+select * from detalii_comanda;
+ROLLBACK;
+
+UPDATE Recenzii
+SET Text_Recenzie = 'Produsul este ok', Nota = 4
+WHERE ID_Recenzie = 7;
+SELECT * FROM recenzii;
+ROLLBACK;
+
+DELETE Recenzii 
+WHERE ID_Recenzie = 1;
+
+ROLLBACK;
+
+
+select * from produse;
+update produse
+set pret = pret * 0.80 
+where  stoc <= 8;  -- UNDE MAI E PUTIN STOC SCADEM PRETUL 
+ROLLBACK;
+
+UPDATE Produse
+SET Pret = Pret * (SELECT AVG(Nota) FROM Recenzii WHERE ID_Produs = Produse.ID_Produs);  
+select * from produse;
+ROLLBACK;
+
+
+SELECT * FROM clienti;
+SELECT * FROM comenzi;
+
+UPDATE Clienti c
+SET Adresa = 'Necunoscuta'
+WHERE EXISTS (
+    SELECT 1
+    FROM Comenzi co
+    WHERE co.ID_Client = c.ID_Client 
+    AND co.Status = 'Neprocesata'
+);
+ROLLBACK;
+
+UPDATE detalii_comanda
+SET pret_unitar = pret_unitar * 1.05
+WHERE id_produs IN 
+(SELECT id_produs FROM detalii_comanda GROUP BY id_produs HAVING SUM(pret_unitar*cantitate) > 1000);
+SELECT * FROM detalii_comanda;
+
+
+DELETE FROM Clienti
+WHERE (SELECT Status FROM comenzi WHERE Status = 'Anulata');
+ROLLBACK;
+select * from comenzi ;
+select* from clienti;
+
+-- JONCTIUNII :::
+
+SELECT * FROM produse;
+SELECT * FROM detalii_comanda;
+
+SELECT p.id_produs, p.nume , p.pret, dc.cantitate 
+FROM produse p, detalii_comanda dc
+WHERE p.id_produs(+)  = dc.id_produs;  --Se afiseaza toate produsele indiferent daca acestea au fost comandate sau nu
+
+
+SELECT p.id_produs, p.nume , p.pret, dc.cantitate 
+FROM produse p, detalii_comanda dc
+WHERE p.id_produs = dc.id_produs(+);  --Se afiseaza toate produsele care au fost comandate 
+
+---------------------------------------------------
+select *from comenzi;
+select *from detalii_comanda;
+
+SELECT c.id_comanda, c.data_comanda, SUM(dc.cantitate * dc.pret_unitar)AS valoare_comanda
+FROM comenzi c, detalii_comanda dc
+WHERE c.id_comanda = dc.id_comanda 
+AND EXTRACT (MONTH FROM c.data_comanda) = 06
+GROUP BY c.id_comanda, c.data_comanda
+HAVING SUM(dc.cantitate * dc.pret_unitar) > 70
+ORDER BY c.data_comanda ;
+
+--------------------------------------------------
+SELECT * FROM clienti;
+SELECT * FROM recenzii;
+
+SELECT c.nume ,c.nume_mijlociu, c.data_nastere ,r.nota, r.text_recenzie
+FROM clienti c, recenzii r
+WHERE c.id_Client = r.id_client 
+AND EXTRACT(YEAR FROM c.data_nastere) > 1990
+AND r.nota >= 4
+ORDER BY r.nota;
+ 
+---------------------------------------------------
+SELECT * FROM recenzii;
+SELECT * FROM produse;
+
+SELECT p.id_produs, p.nume, p.pret , r.text_recenzie, r.nota
+FROM produse p, recenzii r
+WHERE p.id_produs = r.id_produs
+AND r.nota >= 3
+AND p.pret > 800
+ORDER BY p.id_produs;
+
+---------------------------------------------------------
+SELECT * FROM comenzi;
+SELECT * FROM detalii_comanda;
+
+SELECT c.id_comanda, c.data_comanda , SUM(dc.pret_unitar * dc.cantitate) as valoare_totala,
+CASE
+    WHEN SUM(dc.pret_unitar * dc.cantitate) < 1000 THEN 200
+    WHEN SUM(dc.pret_unitar * dc.cantitate) BETWEEN 1000 AND 2000 THEN 250
+    WHEN SUM(dc.pret_unitar * dc.cantitate) > 2000 THEN 300
+    ELSE 0 
+END as transport
+FROM comenzi c, detalii_comanda dc
+WHERE c.id_comanda = dc.id_comanda
+GROUP BY c.id_comanda, c.data_comanda;
+
+------------------------------------------------------------
+
+SELECT * FROM comenzi;
+select * from detalii_comanda;
+
+SELECT c.id_comanda, c.data_comanda, SUM(dc.pret_unitar * dc.cantitate) as valoare_totala, COUNT(dc.id_produs) as numar_produse
+FROM comenzi c, detalii_comanda dc
+WHERE c.id_comanda = dc.id_comanda
+AND EXTRACT(YEAR from c.data_comanda) = 2023
+GROUP BY c.id_comanda, c.data_comanda
+HAVING COUNT(dc.id_produs) >= 1;
+
+------------------------------------------------------------
+
+SELECT ID_Produs FROM Detalii_Comanda
+MINUS
+SELECT ID_Produs FROM Recenzii;    --PRODUSE CARE NU AU PRIMIT RECENZII
+
+SELECT ID_Produs FROM Detalii_Comanda
+INTERSECT
+SELECT ID_Produs FROM Recenzii;-- PRODUSE CARE AU FOST RECENZATE 
+
+---------------------------------------------------------------
+
+--FUNCTII SINGLE ROW
+
+select * from produse;
+
+SELECT id_produs, UPPER(nume) 
+FROM produse
+WHERE pret > 4000;
+
+SELECT id_produs, lower(descriere) 
+FROM produse
+WHERE pret < 4000;
+
+SELECT id_comanda, data_comanda
+FROM comenzi 
+WHERE round(MONTHS_BETWEEN(sysdate, data_comanda))=1; --comenzile incheiate in luna trecuta 
+-------------------------------------------------------------------------------------------
+SELECT nume, TO_CHAR(data_nastere, 'DD Mon YYYY') AS data_formatata
+FROM clienti
+WHERE EXTRACT(YEAR FROM data_nastere) > 1980;
+
+SELECT nume, SUBSTR(nume_mijlociu, 1, 4) AS alint
+FROM clienti;
+
+---------------------------------------------------------------------------------------------
+
+select * from comenzi;
+SELECT id_comanda, data_comanda 
+FROM comenzi
+WHERE data_comanda BETWEEN TO_DATE( '2023-06-12', 'YYYY-MM-DD') AND TO_DATE( '2023-11-12', 'YYYY-MM-DD')
+ORDER BY data_comanda; -- comenzi intre 12 iunie  si 12 noiembrie
+
+SELECT id_produs, ROUND(AVG(cantitate),1) AS medie_produse
+FROM detalii_comanda
+GROUP BY id_produs 
+HAVING ROUND(AVG(cantitate),1)>2;  -- PRODUSELE SI CANTITATEA MEDIE VANDUTA NUMAI UNDE CANTITATEA E MAI MARE DE 2 
+
+-----------------------------------------------------------------
+SELECT c.id_comanda, SUM(dc.cantitate  * dc.pret_unitar)AS total_comanda
+FROM comenzi c, detalii_comanda dc
+WHERE dc.id_comanda=c.id_comanda
+GROUP BY c.id_comanda
+ORDER BY total_comanda DESC;  --valoarea totala a fiecarei comenzi si sa se sorteaza descrescator in functie de caloare
+
+SELECT * FROM detalii_comanda;
+ROLLBACK;
+
+
+---------------------------------MINUS ------------------------
+SELECT * FROM detalii_comanda;
+SELECT * FROM comenzi;
+
+SELECT c.id_comanda, c.data_comanda , SUM(dc.pret_unitar * dc.cantitate) as valoare_totala,
+CASE
+    WHEN SUM(dc.pret_unitar * dc.cantitate) < 1000 THEN 200
+    WHEN SUM(dc.pret_unitar * dc.cantitate) BETWEEN 1000 AND 2000 THEN 250
+    WHEN SUM(dc.pret_unitar * dc.cantitate) > 2000 THEN 300
+    ELSE 0 
+END as transport
+FROM comenzi c, detalii_comanda dc
+WHERE c.id_comanda = dc.id_comanda
+GROUP BY c.id_comanda, c.data_comanda;
+MINUS
+SELECT c.id_comanda, c.data_comanda , SUM(dc.pret_unitar * dc.cantitate) as valoare_totala,
+CASE
+    WHEN SUM(dc.pret_unitar * dc.cantitate) < 1000 THEN 200
+    WHEN SUM(dc.pret_unitar * dc.cantitate) BETWEEN 1000 AND 2000 THEN 250
+    WHEN SUM(dc.pret_unitar * dc.cantitate) > 2000 THEN 300
+    ELSE 0 
+END as transport
+FROM comenzi c, detalii_comanda dc
+WHERE c.id_comanda = dc.id_comanda
+AND EXTRACT(MONTH FROM c.data_comanda) BETWEEN 06 AND 11
+AND c.id_comanda > 3
+GROUP BY c.id_comanda, c.data_comanda;
+
+-------------------------------------------------------------------------------------
+SELECT * FROM clienti;
+SELECT * FROM recenzii;
+
+SELECT c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere) AS an_nastere, r.nota
+FROM clienti c, recenzii r
+WHERE c.id_Client = r.id_client 
+AND EXTRACT(YEAR FROM c.data_nastere) > 1980
+AND r.nota BETWEEN 1 AND 2
+GROUP BY c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere), r.nota
+UNION
+
+SELECT c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere) AS an_nastere, r.nota
+FROM clienti c, recenzii r
+WHERE c.id_Client = r.id_client 
+AND EXTRACT(YEAR FROM c.data_nastere) > 1980
+AND r.nota BETWEEN 3 AND 4
+GROUP BY c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere), r.nota
+UNION
+
+SELECT c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere) AS an_nastere, r.nota
+FROM clienti c, recenzii r
+WHERE c.id_Client = r.id_client 
+AND EXTRACT(YEAR FROM c.data_nastere) > 1980
+AND r.nota = 5
+GROUP BY c.nume, c.nume_mijlociu, EXTRACT(YEAR FROM c.data_nastere), r.nota
+ORDER BY nota;
+
+
+---------------------------------------------------------------------------
+SELECT * FROM produse;
+SELECT * FROM detalii_comanda;
+
+SELECT p.id_produs, p.nume, SUM(dc.pret_unitar * dc.cantitate)AS valoare_totala, COUNT(dc.id_comanda) AS nr_comenzi
+FROM produse p, detalii_comanda dc
+WHERE p.id_produs = dc.id_produs
+GROUP BY p.nume , p.id_produs
+HAVING COUNT(dc.id_comanda) >=1;
+INTERSECT
+SELECT p.id_produs, p.nume, SUM(dc.pret_unitar * dc.cantitate)AS valoare_totala, COUNT(dc.id_comanda) AS nr_comenzi
+FROM produse p, detalii_comanda dc
+WHERE p.id_produs = dc.id_produs
+GROUP BY p.nume, p.id_produs
+HAVING SUM(dc.pret_unitar * dc.cantitate) NOT IN (1199.98, 199.99); -- in final avem doar 8 comenzi
+
+---------------------------------------------------------------------------------------------------
+
+SELECT * FROM detalii_comanda
+WHERE cantitate BETWEEN 1 AND 3
+AND pret_unitar <2000.00; -- sunt 5 (4, 6, 7, 8, 9)
+
+SELECT * FROM detalii_comanda
+WHERE cantitate BETWEEN 1 AND 3
+MINUS 
+SELECT * FROM detalii_comanda 
+WHERE pret_unitar < 2000.00; -- aici afiseaza doar 3 si anume (1, 2, 3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+DROP TABLE Clienti CASCADE CONSTRAINTS;
+DROP TABLE Comenzi CASCADE CONSTRAINTS;
+DROP TABLE Detalii_comanda CASCADE CONSTRAINTS;
+DROP TABLE Produse CASCADE CONSTRAINTS;
+DROP TABLE Recenzii CASCADE CONSTRAINTS;
+
+select*from clienti;
+select*from comenzi;
+select*from detalii_comanda
+select*from produse;
+select*from recenzii;
+
+
+SET SERVEROUTPUT ON
+
+select*from produse;
+
+DECLARE
+  CURSOR c_produse IS
+    SELECT id_produs, nume, stoc
+    FROM produse;
+
+  v_record c_produse%ROWTYPE;
+BEGIN
+  OPEN c_produse;
+
+  LOOP
+    FETCH c_produse INTO v_record;
+    EXIT WHEN c_produse%NOTFOUND;
+
+    IF v_record.stoc > 10 THEN
+      DBMS_OUTPUT.PUT_LINE('Produsul ' || v_record.nume || ' are multe bucati în stoc: ' || v_record.stoc);
+    ELSIF v_record.stoc > 0 THEN
+      DBMS_OUTPUT.PUT_LINE('Produsul ' || v_record.nume || ' are un stoc redus: ' || v_record.stoc);
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('Produsul ' || v_record.nume || ' este stoc 0!');
+    END IF;
+  END LOOP;
+
+  CLOSE c_produse;
+END;
+/
+
+--------------------------------------------------------------------
+select*from clienti;
+DECLARE
+  v_anul_curent NUMBER := 2024; -- Anul curent
+  v_mesaj VARCHAR2(200);
+
+  CURSOR c_clienti IS
+    SELECT nume, prenume, EXTRACT(YEAR FROM data_nastere) AS an_nastere
+    FROM clienti;
+
+  v_record c_clienti%ROWTYPE;
+BEGIN
+  OPEN c_clienti;
+
+  LOOP
+    FETCH c_clienti INTO v_record;
+    EXIT WHEN c_clienti%NOTFOUND;
+
+    IF v_anul_curent - v_record.an_nastere = 20 THEN
+      v_mesaj := 'Felicitari, ' || v_record.prenume || ' ' || v_record.nume || '! Ai împlinit 20 ani în acest an.';
+    ELSIF v_anul_curent - v_record.an_nastere > 20 THEN
+      v_mesaj := 'Felicitari, ' || v_record.prenume || ' ' || v_record.nume || '! Ai peste 20 ani.';
+    ELSE
+      v_mesaj := 'Felicitari, ' || v_record.prenume || ' ' || v_record.nume || '! Vei împlini 20 ani în viitor.';
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE(v_mesaj);
+  END LOOP;
+
+  CLOSE c_clienti;
+END;
+/
+
+---------------------------------------------------------------------------
+
+DECLARE
+    v_id_comanda comenzi.id_comanda%TYPE;
+    v_data_comanda comenzi.data_comanda%TYPE;
+
+    CURSOR c_comenzi IS
+        SELECT id_comanda, data_comanda
+        FROM comenzi;
+BEGIN
+    OPEN c_comenzi;
+    LOOP
+        FETCH c_comenzi INTO v_id_comanda, v_data_comanda;
+        EXIT WHEN c_comenzi%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('ID Comanda: ' || v_id_comanda || ', Data Comanda: ' || v_data_comanda);
+    END LOOP;
+    CLOSE c_comenzi;
+END;
+/
+
+
+-------------------------------------------------------------------------------------------------------
+SELECT*FROM COMENZI;
+DECLARE
+    v_id_comanda comenzi.id_comanda%TYPE;
+    v_data_comanda comenzi.data_comanda%TYPE;
+
+    CURSOR c_comenzi IS
+        SELECT id_comanda, data_comanda
+        FROM comenzi 
+        ORDER BY data_comanda; 
+    v_numar_comenzi NUMBER := 0;
+BEGIN
+    OPEN c_comenzi;
+    LOOP
+        FETCH c_comenzi INTO v_id_comanda, v_data_comanda;
+        EXIT WHEN c_comenzi%NOTFOUND;
+        v_numar_comenzi := v_numar_comenzi + 1;
+
+        DBMS_OUTPUT.PUT_LINE('ID Comanda: ' || v_id_comanda || ', Data Comanda: ' || v_data_comanda);
+
+        IF v_numar_comenzi >= 3 THEN
+            EXIT;
+        END IF;
+    END LOOP;
+    
+    CLOSE c_comenzi;
+END;
+/
+
+
+--------------------------------------------------------------------------------------------------------------
+DECLARE
+    -- Declarați variabilele
+    v_id_comanda comenzi.id_comanda%TYPE;
+    v_data_comanda comenzi.data_comanda%TYPE;
+    v_stare_comanda comenzi.stare%TYPE;
+
+BEGIN
+    -- Iterați prin fiecare înregistrare din tabel folosind un cursor implicit
+    FOR comanda_rec IN (SELECT id_comanda, data_comanda, stare
+                        FROM comenzi
+                        ORDER BY data_comanda)
+    LOOP
+        -- Atribuiți valorile din înregistrare variabilelor corespunzătoare
+        v_id_comanda := comanda_rec.id_comanda;
+        v_data_comanda := comanda_rec.data_comanda;
+        v_stare_comanda := comanda_rec.stare;
+        
+        -- Verificați starea comenzii și efectuați operații corespunzătoare
+        IF v_stare_comanda = 'Procesata' THEN
+            -- Realizați acțiunile necesare pentru comenzile aflate în procesare
+            DBMS_OUTPUT.PUT_LINE('Comanda ' || v_id_comanda || ' este procesata.');
+        ELSIF v_stare_comanda = 'Neprocesata' THEN
+            -- Realizați acțiunile necesare pentru comenzile finalizate
+            DBMS_OUTPUT.PUT_LINE('Comanda ' || v_id_comanda || ' este in curs de procesare.');
+        ELSE
+            -- Alte acțiuni pentru alte stări de comandă
+            DBMS_OUTPUT.PUT_LINE('Starea comenzii ' || v_id_comanda || ' nu este cunoscuta.');
+        END IF;
+
+        -- Adăugați alte structuri de control sau verificări aici, după cum este necesar
+
+    END LOOP;
+END;
+/
+-------------------------------------------------------------------------------------------------
+select*from comenzi;
+select*from detalii_comanda;
+select*from clienti;
+DECLARE
+  v_nume clienti.nume%TYPE;
+  v_prenume clienti.prenume%TYPE;
+  v_vanzari_totale NUMBER;
+BEGIN
+  FOR rec IN
+    (SELECT c.nume, c.prenume, SUM(dc.cantitate * dc.pret_unitar) AS vanzari_totale
+     FROM clienti c
+     JOIN comenzi co ON c.id_client = co.id_client
+     JOIN detalii_comanda dc ON co.id_comanda = dc.id_comanda
+     WHERE co.id_comanda BETWEEN 2 AND 8
+     GROUP BY c.nume, c.prenume)
+  LOOP
+    v_nume := rec.nume;
+    v_prenume := rec.prenume;
+    v_vanzari_totale := rec.vanzari_totale;
+    DBMS_OUTPUT.PUT_LINE(v_prenume || ' ' || v_nume || ' - Vanzari totale: ' || v_vanzari_totale);
+  END LOOP;
+END;
+/
